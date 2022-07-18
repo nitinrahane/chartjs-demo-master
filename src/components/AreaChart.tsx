@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Slider } from "@mui/material";
 import moment from "moment";
 import htmlLegendPlugin from "./CustomeLegendsPlugin";
-import mockData  from "../utils/data";
+
+import {GetDataForChart} from './Helples';
 
 import {
   Chart as ChartJS,
@@ -13,7 +14,7 @@ import {
   Title,
   Tooltip,
   Filler,
-  Legend,
+  Legend,  
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
@@ -31,9 +32,10 @@ ChartJS.register(
   htmlLegendPlugin
 );
 
-const minYear = 2020;
-const maxYear = 2022;
+
 const step = 0.083;
+const minYear = 2020;
+const maxYear = 2023;
 const months = Array.from({ length: 12 }, (item, i) => {
   return new Date(0, i).toLocaleString("en-US", { month: "short" });
 });
@@ -44,9 +46,6 @@ type silderMarks = {
   value: number,
   label: string
 }
-
-
-
 export const options = {
   responsive: true,
   maintainAspectRatio: false,
@@ -61,8 +60,7 @@ export const options = {
       align : 'start' as const,
       display: false,
     },   
-    htmlLegend: {
-      // ID of the container to put the legend in
+    htmlLegend: {     
       containerID: 'legend-container',
     },
     title: {
@@ -72,9 +70,9 @@ export const options = {
   },
 };
 
-const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
+const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
 
-export const data = {
+export const data12 = {
   labels,
   datasets: [
     {
@@ -139,25 +137,40 @@ export const data2 = {
     },
   ],
 };
-
-
 const AreaChart = () => {
-  const minDistance = 83.33;
+
+  const [data, setData] = React.useState<any>(GetDataForChart(minYear, maxYear, "Monthly"));
   const [value, setValue] = React.useState<number[]>([minYear, maxYear]);
+ 
+
   const handleChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number[]);
-    console.log(newValue);
+    let numbers = newValue as number[];
+    setValue(numbers);
+    // const data = GetDataForChart(numbers[0], numbers[1], "Monthly");
+    // setData(data);
+    // // console.log(data);
+    // console.log(newValue);
   };
 
-  const getLabel = React.useCallback((value: number) => {
+  const handleChange2 = (event: React.SyntheticEvent | Event, value: number | Array<number>) => {
+     let numbers = value as number[];
+    // setValue(numbers);
+    const data = GetDataForChart(numbers[0], numbers[1], "Monthly");
+    setData(data);
+    // console.log(data);
+    console.log(numbers);
+  }
+
+  
+  const getLabel = (value: number) => {
     let strValue = value.toString().split('.');
-    let textToShow = `${months[0]} ${strValue[0]}`;
+    let textToShow = `${months[0]} ${strValue[0]}`;   
     if (!!strValue && strValue.length === 2) {
-      let index = Math.ceil(Number('0.' + strValue[1]) / step);
+      let index = Math.ceil(Number('0.' + strValue[1]) / step);;
       textToShow = `${months[index]} ${strValue[0]}`
     }
-    return `${textToShow}`;
-  }, [value]);
+    return textToShow;
+  }
 
   const generateMarks = React.useCallback(() => {
     let marks: silderMarks[] = [];
@@ -210,12 +223,13 @@ const AreaChart = () => {
             min={minYear}
             max={maxYear}
             marks={generateMarks()}
-            step={step}
+            step={null}
             sx={{
               width: "100%",
               margin: "0 0 0 2.3rem",
             }}
             valueLabelFormat={getLabel}
+            onChangeCommitted={handleChange2}
           />
         </Box>
       </Box>
