@@ -103,8 +103,8 @@ export const GetDatasetForYear = (params: params, currentYear: number, dataSet: 
         const currentYearSeries = currentYearDataset[0].data;
         switch (true) {
             case (currentYear === params.minValueYear && currentYear === params.maxValueYear): {
-                currentSeries = currentYearSeries.slice(params.minValueMonth, params.maxValueMonth);
-                currentSeriesLabels = months.slice(params.minValueMonth, params.maxValueMonth);
+                currentSeries = currentYearSeries.slice(params.minValueMonth, params.maxValueMonth + 1);
+                currentSeriesLabels = months.slice(params.minValueMonth, params.maxValueMonth + 1);
                 break;
             }
             case (currentYear === params.minValueYear): {
@@ -113,8 +113,8 @@ export const GetDatasetForYear = (params: params, currentYear: number, dataSet: 
                 break;
             }
             case (currentYear === params.maxValueYear): {
-                currentSeries = currentYearSeries.slice(0, params.maxValueMonth);
-                currentSeriesLabels = months.slice(0, params.maxValueMonth);
+                currentSeries = currentYearSeries.slice(0, params.maxValueMonth + 1);
+                currentSeriesLabels = months.slice(0, params.maxValueMonth + 1);
                 break;
             }
             case (currentYear > params.minValueYear && currentYear < params.maxValueYear): {
@@ -141,5 +141,7 @@ export const GetDataObj = (series:number[], seriesIndex:number, seriesName:strin
         'borderColor': seriesColors[seriesIndex],
         'backgroundColor': seriesColors[seriesIndex],
         'tension': 0.4,
+        // 'pointRadius':0,
+        // 'pointHiverRadius':0
     }
 }

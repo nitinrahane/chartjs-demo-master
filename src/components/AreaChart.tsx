@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Slider } from "@mui/material";
-import moment from "moment";
 import htmlLegendPlugin from "./CustomeLegendsPlugin";
 
 import {GetDataForChart} from './Helples';
@@ -146,8 +145,8 @@ const AreaChart = () => {
   const handleChange = (event: Event, newValue: number | number[]) => {
     let numbers = newValue as number[];
     setValue(numbers);
-    // const data = GetDataForChart(numbers[0], numbers[1], "Monthly");
-    // setData(data);
+    const data = GetDataForChart(numbers[0], numbers[1], "Monthly");
+    setData(data);
     // // console.log(data);
     // console.log(newValue);
   };
@@ -155,8 +154,8 @@ const AreaChart = () => {
   const handleChange2 = (event: React.SyntheticEvent | Event, value: number | Array<number>) => {
      let numbers = value as number[];
     // setValue(numbers);
-    const data = GetDataForChart(numbers[0], numbers[1], "Monthly");
-    setData(data);
+    // const data = GetDataForChart(numbers[0], numbers[1], "Monthly");
+    // setData(data);
     // console.log(data);
     console.log(numbers);
   }
@@ -180,6 +179,7 @@ const AreaChart = () => {
         marks.push({ label: `${j === 0 ? i.toString() : ""}`, value: value });
       }
     }
+    console.log(marks)
     return marks;
   }, []);
   return (
